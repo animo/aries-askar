@@ -5,7 +5,6 @@ set (CMAKE_CXX_STANDARD 11)
 
 add_library(cpp
             SHARED
-            ../cpp/react-native-aries-askar.cpp
             cpp-adapter.cpp
 )
 
