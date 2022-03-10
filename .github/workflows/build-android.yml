@@ -1,4 +1,4 @@
-name: "testing-android-setup"
+name: build-android
 
 on: [push]
 
