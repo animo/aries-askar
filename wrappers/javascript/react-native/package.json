@@ -1,9 +1,21 @@
 {
   "name": "react-native-aries-askar",
   "version": "0.1.0",
+  "author": "Hyperledger (https://github.com/hyperledger)",
+  "license": "Apache-2.0",
   "description": "React Native wrapper for Aries Askar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperledger/aries-askar",
+    "directory": "wrappers/javascript/react-native"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "react-native": "src/index",
   "source": "src/index",
+  "main": "build/index",
+  "types": "build/index",
   "files": [
     "src",
     "lib",
@@ -14,19 +26,16 @@
   ],
   "scripts": {
     "typescript": "tsc --noEmit",
-    "example": "yarn --cwd example"
+    "example": "yarn --cwd example",
+    "tscodegen": "react-native-tscodegen ./react-native-tscodegen.json"
   },
-  "repository": "https://github.com/animo/aries-askar",
-  "author": "Animo Solutions <berend@animo.id> (https://github.com/animo)",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/animo/aries-askar/issues"
   },
   "homepage": "https://github.com/animo/aries-askar#readme",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "dependencies": {
+    "react-native-tscodegen-types": "0.67.3"
   },
-  "dependencies": {},
   "devDependencies": {
     "react-native-tscodegen": "0.68.4",
     "@types/react": "17.0.21",
