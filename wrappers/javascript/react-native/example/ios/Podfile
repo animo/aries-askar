@@ -8,5 +8,5 @@ target 'AriesAskarExample' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'react-native-aries-askar', :path => '../..'
+  pod 'aries-askar-react-native', :path => '../../react-native-aries-askar.podspec'
 end

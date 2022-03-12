@@ -14,12 +14,8 @@
 namespace facebook {
 namespace react {
 class JSI_EXPORT AriesAskarCxxSpecJSI : public TurboModule {
-protected:
-  AriesAskarCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
-
 public:
-
-
+    AriesAskarCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker);
 };
 
 } // namespace react
