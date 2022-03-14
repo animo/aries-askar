@@ -13,7 +13,7 @@ class AriesAskarModule(reactContext: ReactApplicationContext?) : ReactContextBas
 
     init {
       try {
-        System.loadLibrary("aries-askar")
+        System.loadLibrary("aries_askar")
       } catch (ignored: Exception) {
       }
     }

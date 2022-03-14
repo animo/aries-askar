@@ -15,7 +15,6 @@ struct State {
     State(jsi::Function *cb_): cb(std::move(*cb_)) {}
 };
 
-const char *name = "_aries_askar";
 
 class TurboModuleUtils {
 public:

@@ -12,11 +12,13 @@
 namespace facebook {
 namespace react {
 
-
+static jsi::Value __hostFunction_AriesAskarCxxSpecJSI_version(jsi::Runtime &rt, TurboModule &turboModule, const jsi::Value* args, size_t count) {
+  return static_cast<AriesAskarCxxSpecJSI *>(&turboModule)->version(rt);
+}
 
 AriesAskarCxxSpecJSI::AriesAskarCxxSpecJSI(std::shared_ptr<CallInvoker> jsInvoker)
   : TurboModule("AriesAskar", jsInvoker) {
-
+  methodMap_["version"] = MethodMetadata {0, __hostFunction_AriesAskarCxxSpecJSI_version};
 }
 
 

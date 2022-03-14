@@ -10,7 +10,7 @@ void TurboModuleUtils::installTurboModule(jsi::Runtime &rt, std::shared_ptr<Call
     std::shared_ptr<AriesAskarCxx> turboModule = std::make_shared<AriesAskarCxx>(jsCallInvoker);
 
     // Register AriesAskarCxx instance as global.`NAME`
-    rt.global().setProperty(rt, name, jsi::Object::createFromHostObject(rt, turboModule));
+    rt.global().setProperty(rt, "_ariesAskar", jsi::Object::createFromHostObject(rt, turboModule));
 }
 
 void TurboModuleUtils::handleError(jsi::Runtime &rt, ErrorCode code) {

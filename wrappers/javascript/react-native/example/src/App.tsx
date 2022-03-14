@@ -1,12 +1,12 @@
 import * as React from "react"
 
 import { StyleSheet, View, Text } from "react-native"
-import { libName } from "react-native-aries-askar"
+import { nativeAriesAskar } from "react-native-aries-askar"
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>lib: {libName}</Text>
+      <Text>version: {nativeAriesAskar.version()}</Text>
     </View>
   )
 }

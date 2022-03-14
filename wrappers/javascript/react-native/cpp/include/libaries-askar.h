@@ -6,7 +6,7 @@
 #include <ostream>
 #include <new>
 
-static const uintptr_t PAGE_SIZE = 32;
+//static const uintptr_t PAGE_SIZE = 32;
 
 enum class ErrorCode : int64_t {
   Success = 0,

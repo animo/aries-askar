@@ -13,7 +13,8 @@ namespace react {
 class AriesAskarCxx : public AriesAskarCxxSpecJSI {
 public:
     AriesAskarCxx(std::shared_ptr<CallInvoker> jsInvoker);
-};
 
+    jsi::String version(jsi::Runtime &rt);
+};
 }
 }

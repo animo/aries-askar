@@ -207,7 +207,9 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation project(':reactnativeariesaskar')
+    implementation (project(':reactnativeariesaskar')) {
+      exclude group:'com.facebook.fbjni'
+    }
 }
 
 // Run this once to be able to run the application with BUCK
