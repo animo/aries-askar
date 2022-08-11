@@ -10,7 +10,13 @@
     "types": [],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "aries-askar-shared": ["shared/src"],
+      "aries-askar-react-native": ["react-native/src"],
+      "aries-askar-nodejs": ["nodejs/src"]
+    }
   },
   "exclude": ["node_modules", "build", "**/build/**"]
 }
