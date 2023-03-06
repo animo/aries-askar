@@ -23,23 +23,180 @@ void registerTurboModule(jsi::Runtime &rt,
 void assertValueIsObject(jsi::Runtime &rt, const jsi::Value *val) {
   val->asObject(rt);
 }
-void handleError(jsi::Runtime &rt, ErrorCode code) {
-  if (code == ErrorCode::Success)
-    return;
 
-  jsi::Value errorMessage = ariesAskar::getCurrentError(rt, jsi::Object(rt));
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             const char *value) {
+  auto object = jsi::Object(rt);
 
-  jsi::Object JSON = rt.global().getPropertyAsObject(rt, "JSON");
-  jsi::Function JSONParse = JSON.getPropertyAsFunction(rt, "parse");
-  jsi::Object parsedErrorObject =
-      JSONParse.call(rt, errorMessage).getObject(rt);
-  jsi::Value message = parsedErrorObject.getProperty(rt, "message");
-  if (message.isString()) {
-    throw jsi::JSError(rt, message.getString(rt).utf8(rt));
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr = value == nullptr
+                                   ? jsi::Value::null()
+                                   : jsi::Value::createFromAscii(rt, value);
+    object.setProperty(rt, "value", valueWithoutNullptr);
   }
-  throw jsi::JSError(rt, "Could not get message with code: " +
-                             std::to_string(code));
-};
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             nullptr_t value) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    object.setProperty(rt, "value", jsi::Value::null());
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code, int32_t out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr =
+        value == nullptr ? jsi::Value::null() : jsi::Value(rt, value);
+    object.setProperty(rt, "value", valueWithoutNullptr);
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code, int8_t out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr =
+        value == nullptr ? jsi::Value::null() : jsi::Value(rt, value);
+    object.setProperty(rt, "value", valueWithoutNullptr);
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code, int64_t out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr =
+        value == nullptr ? jsi::Value::null() : jsi::Value(rt, value);
+    object.setProperty(rt, "value", valueWithoutNullptr);
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code, intrptr_t out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr = value == nullptr ? jsi::Value::null() : jsi::Value(out));
+    object.setProperty(rt, "value", valueWithoutNullPtr);
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             SecretBuffer out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    auto valueWithoutNullptr = value == nullptr
+                                   ? jsi::Value::null()
+                                   : secretBufferToArrayBuffer(rt, out);
+    object.setProperty(rt, "value", valueWithoutNullptr);
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             LocalKeyHandle out) {
+  return createReturnValue(rt, code, out == nullptr ? out : intptr_t(out._0));
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             EntryListHandle out) {
+  return createReturnValue(rt, code, out == nullptr ? out : intptr_t(out._0));
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             KeyEntryListHandle out) {
+  return createReturnValue(rt, code, out == nullptr ? out : intptr_t(out._0));
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code,
+                             EncryptedBuffer out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    if (out == nullptr || out.buffer == nullptr || out.tag_pos == nullptr ||
+        out.nonce_pos == nullptr) {
+      object.setProperty(rt, "value", jsi::Value::null());
+    } else {
+      auto object = jsi::Object(rt);
+
+      object.setProperty(rt, "buffer",
+                         secretBufferToArrayBuffer(rt, out.buffer));
+      object.setProperty(rt, "tagPos", int(out.tag_pos));
+      object.setProperty(rt, "noncePos", int(out.nonce_pos));
+
+      object.setProperty(rt, "value", object);
+    }
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
+
+template <>
+jsi::Value createReturnValue(jsi::Runtime &rt, ErrorCode code, AeadParams out) {
+  auto object = jsi::Object(rt);
+
+  if (code == ErrorCode::Success) {
+    if (out == nullptr || out.nonce_length == nullptr ||
+        out.nonce_length == nullptr) {
+      object.setProperty(rt, "value", jsi::Value::null());
+    } else {
+      auto object = jsi::Object(rt);
+
+      object.setProperty(rt, "nonceLength", out.nonce_length);
+      object.setProperty(rt, "tagLength", out.tag_length);
+
+      object.setProperty(rt, "value", object);
+    }
+  }
+
+  object.setProperty(rt, "errorCode", code);
+
+  return object;
+}
 
 void callback(CallbackId result, ErrorCode code) {
   invoker->invokeAsync([result, code]() {
@@ -47,7 +204,10 @@ void callback(CallbackId result, ErrorCode code) {
     State *state = static_cast<State *>(_state);
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
-    cb->call(*rt, int(code));
+
+    auto object = jsi::Object(*rt);
+    object.setProperty(*rt, "errorCode", code);
+    cb->call(*rt, object);
   });
   //  delete state;
 }
@@ -60,7 +220,9 @@ void callbackWithResponse(CallbackId result, ErrorCode code, size_t response) {
     State *state = static_cast<State *>(_state);
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
-    cb->call(*rt, int(code), int(response));
+
+    auto out = createReturnValue(*rt, code, response);
+    cb->call(*rt, out);
   });
 }
 
@@ -73,10 +235,8 @@ void callbackWithResponse(CallbackId result, ErrorCode code,
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
 
-    jsi::Value ret = response ? jsi::String::createFromAscii(*rt, response)
-                              : jsi::Value::null();
-
-    cb->call(*rt, int(code), ret);
+    auto out = createReturnValue(*rt, code, response);
+    cb->call(*rt, out);
   });
 }
 
@@ -89,15 +249,8 @@ void callbackWithResponse(CallbackId result, ErrorCode code,
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
 
-    std::string serializedPointer = std::to_string(intptr_t(response._0));
-    jsi::String pointer = jsi::String::createFromAscii(*rt, serializedPointer);
-
-    jsi::Value ret = response._0
-                         ? jsi::String::createFromAscii(
-                               *rt, std::to_string(intptr_t(response._0)))
-                         : jsi::Value::null();
-
-    cb->call(*rt, int(code), ret);
+    auto out = createReturnValue(*rt, code, response);
+    cb->call(*rt, out);
   });
 }
 
@@ -110,12 +263,7 @@ void callbackWithResponse(CallbackId result, ErrorCode code,
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
 
-
-    jsi::Value ret = response._0
-                         ? jsi::String::createFromAscii(
-                               *rt, std::to_string(intptr_t(response._0)))
-                         : jsi::Value::null();
-
+    auto out = createFromReturnValue(*rt, code, response);
     cb->call(*rt, int(code), ret);
   });
 }
@@ -127,7 +275,9 @@ void callbackWithResponse(CallbackId result, ErrorCode code, int8_t response) {
     State *state = static_cast<State *>(_state);
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
-    cb->call(*rt, int(code), int(response));
+
+    auto out = createFromReturnValue(*rt, code, response);
+    cb->call(*rt, out);
   });
 }
 
@@ -138,7 +288,9 @@ void callbackWithResponse(CallbackId result, ErrorCode code, int64_t response) {
     State *state = static_cast<State *>(_state);
     jsi::Function *cb = &state->cb;
     jsi::Runtime *rt = reinterpret_cast<jsi::Runtime *>(state->rt);
-    cb->call(*rt, int(code), int(response));
+
+    auto out = createFromReturnValue(*rt, code, response);
+    cb->call(*rt, out);
   });
 }
 
@@ -324,13 +476,15 @@ jsi::ArrayBuffer byteBufferToArrayBuffer(jsi::Runtime &rt, ByteBuffer bb) {
 }
 
 jsi::ArrayBuffer secretBufferToArrayBuffer(jsi::Runtime &rt, SecretBuffer sb) {
+  if (sb == nullptr)
+    return nullptr;
+
   jsi::ArrayBuffer arrayBuffer = rt.global()
                                      .getPropertyAsFunction(rt, "ArrayBuffer")
                                      .callAsConstructor(rt, int(sb.len))
                                      .getObject(rt)
                                      .getArrayBuffer(rt);
 
-  // TODO: signature here is weird. sb.data cannot go into ab.data()
   memcpy(arrayBuffer.data(rt), sb.data, sb.len);
   return arrayBuffer;
 }
